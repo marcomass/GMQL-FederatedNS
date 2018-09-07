@@ -26,3 +26,15 @@ class DatasetSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Dataset
         fields = ('identifier', 'name', 'namespace', 'author', 'description', 'pub_date', 'locations', 'allowed_to')
+
+class AuthenticationSerializer(serializers.HyperlinkedModelSerializer):
+
+    identifier = serializers.SerializerMethodField()
+
+    def get_identifier(self, obj):
+        return '{}_{}'.format(obj.client.namespace, obj.target.namespace)
+
+    class Meta:
+        model = Authentication
+        fields = ('identifier', 'client', 'target', 'token', 'expiration')
+

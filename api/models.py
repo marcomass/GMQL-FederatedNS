@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+#from django.contrib.auth.base_user import BaseUserManager
+import uuid
+
 from django.utils import timezone
 
 
@@ -32,7 +35,6 @@ class MyUserManager(UserManager):
             namespace   = namespace,
             name        = name
         )
-
 
         user.set_password(password)
         user.username = namespace
@@ -79,7 +81,7 @@ class Dataset(models.Model):
     description = models.CharField(max_length=300)
     pub_date = models.DateTimeField()
 
-    namespace = models.ForeignKey(Institution, to_field='namespace', on_delete=models.CASCADE)
+    namespace = models.ForeignKey(Institution, to_field='namespace', on_delete=models.CASCADE, editable=False)
 
     locations =  models.ManyToManyField(Location, related_name='dataset_location')
     allowed_to = models.ManyToManyField(Institution, related_name='dataset_institution')
@@ -98,8 +100,29 @@ class Dataset(models.Model):
     def __str__(self):
         return self.dataset_identifier
 
-    def getOwner(self):
-        return self.namespace
+class Authentication(models.Model):
 
-    def getAllowed(self):
-        return self.allowed_to
+    EXPIRATION_DAYS = 14
+
+    client = models.ForeignKey(Institution, to_field='namespace', related_name='client', on_delete=models.CASCADE, editable=False)
+    target = models.ForeignKey(Institution, to_field='namespace', related_name='target', null=True, blank=True, on_delete=models.CASCADE)
+    token = models.CharField(max_length=50, editable=False)
+    expiration = models.DateTimeField(blank=True, editable=False, default=timezone.now)
+
+    # Generate a token and expiration date on saving
+    def save(self, *args, **kwargs):
+            self.token = uuid.uuid4()
+            self.expiration = timezone.now() + timezone.timedelta(days=self.EXPIRATION_DAYS)
+            super(Authentication, self).save()
+
+    @property
+    def authentication_identifier(self):
+        return str(self.client.namespace) + "_" + self.target.namespace
+
+
+    class Meta:
+        unique_together = (("client", "target"),)
+
+    def __str__(self):
+        return self.authentication_identifier
+
