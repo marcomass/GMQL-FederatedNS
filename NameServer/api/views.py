@@ -11,13 +11,23 @@ from django.db.models import Q
 from serializers import *
 
 
-class InstitutionViewSet(viewsets.ModelViewSet):
+class InstitutionViewSet(viewsets.GenericViewSet, mixins.ListModelMixin):
     """
     API endpoint that allows Institutions to be viewed or edited.
     """
     queryset = Institution.objects.all()
     serializer_class = InstitutionSerializer
     permission_classes = (permissions.IsAuthenticated,)
+
+    lookup_value_regex = '[\w.@+-]+'
+
+    def retrieve(self, request, pk=None):
+        print(pk)
+        queryset = Institution.objects.get_by_natural_key(pk)
+
+
+        serializer = InstitutionSerializer(queryset)
+        return Response(serializer.data)
 
 class LocationViewSet(viewsets.ModelViewSet):
     """
@@ -71,8 +81,7 @@ class AuthenticationViewSet(mixins.CreateModelMixin,
     lookup_value_regex = '[\w.@+-]+'
 
     def retrieve(self, request, pk=None):
-        print("provaaa")
-        print(pk)
+
         # identifier: client + "_" + target
 
         queryset = Authentication.objects.filter(Q(client=request.user) | Q(target=request.user))\

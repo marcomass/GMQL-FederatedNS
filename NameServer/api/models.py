@@ -79,7 +79,7 @@ class Dataset(models.Model):
     name = models.CharField(max_length=50)
     author = models.CharField(max_length=50)
     description = models.CharField(max_length=300)
-    pub_date = models.DateTimeField()
+    pub_date = models.DateTimeField(default=timezone.now)
 
     namespace = models.ForeignKey(Institution, to_field='namespace', on_delete=models.CASCADE, editable=False)
 
