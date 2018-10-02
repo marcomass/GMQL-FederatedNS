@@ -45,6 +45,9 @@ class DatasetViewSet(viewsets.ModelViewSet):
     serializer_class = DatasetSerializer
     lookup_value_regex = '[\w.@+-]+'
 
+    def perform_create(self, serializer):
+        return serializer.save(namespace=self.request.user)
+
 
     # List only those datasets allowed to the current user
     def list(self, request):
