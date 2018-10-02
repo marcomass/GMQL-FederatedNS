@@ -54,7 +54,7 @@ class DatasetViewSet(viewsets.ModelViewSet):
 
         # TODO: Write it in a more proper way
         other_institutions = Institution.objects.exclude(namespace=request.user.namespace)
-        queryset = Dataset.objects.all().exclude(allowed_to__in=other_institutions)
+        queryset = Dataset.objects.all()#.exclude(allowed_to__in=other_institutions)
 
         serializer = DatasetSerializer(queryset, many=True)
         return Response(serializer.data)
