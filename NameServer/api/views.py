@@ -65,7 +65,7 @@ class DatasetViewSet(viewsets.ModelViewSet):
 
         # TODO: Write it in a more proper way
         other_institutions = Institution.objects.exclude(namespace=request.user.namespace)
-        allowed = Dataset.objects.all().exclude(allowed_to__in=other_institutions)
+        allowed = Dataset.objects.all()#.exclude(allowed_to__in=other_institutions)
 
         queryset = allowed.filter().annotate(identifier=Concat('namespace', V('.'), 'name'))
 
