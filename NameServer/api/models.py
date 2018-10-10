@@ -70,10 +70,17 @@ class Location(models.Model):
     details = models.CharField(max_length=300)
     URI = models.CharField(max_length=100)
 
-    owner =  models.ForeignKey(Institution, on_delete=models.CASCADE)
+    namespace =  models.ForeignKey(Institution, to_field='namespace', on_delete=models.CASCADE, editable=False)
+
+    @property
+    def location_identifier(self):
+        return self.namespace_id + "." + self.name
+
+    class Meta:
+        unique_together = (("name", "namespace"),)
 
     def __str__(self):
-        return self.URI + " ( " + self.owner.name + " - " + self.name + " )"
+        return self.URI + " ( " + self.location_identifier + " )"
 
 class Dataset(models.Model):
     name = models.CharField(max_length=50)
@@ -86,9 +93,6 @@ class Dataset(models.Model):
     locations =  models.ManyToManyField(Location, related_name='dataset_location')
     allowed_to = models.ManyToManyField(Institution, related_name='dataset_institution')
 
-    # Add the user as owner
-    def perform_create(self, serializer):
-        serializer.save(owner=self.request.user)
 
     @property
     def dataset_identifier(self):

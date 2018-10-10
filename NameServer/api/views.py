@@ -8,7 +8,7 @@ from rest_framework import viewsets, permissions, mixins
 from rest_framework.response import Response
 from django.db.models import Q
 
-from serializers import *
+from .serializers import *
 
 
 class InstitutionViewSet(viewsets.GenericViewSet, mixins.ListModelMixin):
@@ -36,6 +36,21 @@ class LocationViewSet(viewsets.ModelViewSet):
     queryset = Location.objects.all()
     serializer_class = LocationSerializer
     permission_classes = (permissions.IsAuthenticated,)
+
+    lookup_value_regex = '[\w.@+-]+'
+
+    def perform_create(self, serializer):
+        return serializer.save(namespace=self.request.user)
+
+    def retrieve(self, request, pk=None):
+
+        # identifier: namespace + "." + name
+
+        queryset =  Location.objects.all().annotate(identifier=Concat('namespace', V('.'), 'name'))
+
+        location = get_object_or_404(queryset, identifier = pk )
+        serializer = LocationSerializer(location)
+        return Response(serializer.data)
 
 class DatasetViewSet(viewsets.ModelViewSet):
     """

@@ -9,9 +9,15 @@ class InstitutionSerializer(serializers.HyperlinkedModelSerializer):
 
 class LocationSerializer(serializers.HyperlinkedModelSerializer):
 
+    identifier = serializers.SerializerMethodField()
+
+    def get_identifier(self, obj):
+        return '{}.{}'.format(obj.namespace_id, obj.name)
+
     class Meta:
         model = Location
-        fields = ('name', 'details', 'URI')
+        fields = ('identifier', 'name', 'details', 'URI', 'namespace')
+
 
 class DatasetSerializer(serializers.HyperlinkedModelSerializer):
 
