@@ -49,7 +49,7 @@ class MyUserManager(UserManager):
         user.save(using=self._db)
         return user
 
-class Institution(AbstractUser):
+class Instance(AbstractUser):
     name          = models.CharField(max_length=50, unique=True)
     email         = models.EmailField(max_length=254, unique=True)
     namespace     = models.CharField(max_length=50, unique=True)
@@ -63,14 +63,20 @@ class Institution(AbstractUser):
     def __str__(self):
         return self.namespace + " ( " + self.name + " )"
 
+class Group(models.Model):
+    name       = models.CharField(max_length=50, unique=True)
+    owner      = models.ForeignKey(Instance, to_field='namespace', on_delete=models.CASCADE, editable=False)
+    instances  = models.ManyToManyField(Instance, related_name='group_instance')
 
+    def __str__(self):
+        return self.name + " (created by " + self.owner.namespace + ")"
 
 class Location(models.Model):
     name = models.CharField(max_length=50)
     details = models.CharField(max_length=300)
     URI = models.CharField(max_length=100)
 
-    namespace =  models.ForeignKey(Institution, to_field='namespace', on_delete=models.CASCADE, editable=False)
+    namespace =  models.ForeignKey(Instance, to_field='namespace', on_delete=models.CASCADE, editable=False)
 
     @property
     def location_identifier(self):
@@ -88,10 +94,11 @@ class Dataset(models.Model):
     description = models.CharField(max_length=300)
     pub_date = models.DateTimeField(default=timezone.now)
 
-    namespace = models.ForeignKey(Institution, to_field='namespace', on_delete=models.CASCADE, editable=False)
+    namespace = models.ForeignKey(Instance, to_field='namespace', on_delete=models.CASCADE, editable=False)
 
     locations =  models.ManyToManyField(Location, related_name='dataset_location')
-    allowed_to = models.ManyToManyField(Institution, related_name='dataset_institution')
+    allowed_to_single = models.ManyToManyField(Instance, related_name='dataset_instance')
+    allowed_to_group = models.ManyToManyField(Group, related_name='dataset_group')
 
 
     @property
@@ -108,8 +115,8 @@ class Authentication(models.Model):
 
     EXPIRATION_DAYS = 14
 
-    client = models.ForeignKey(Institution, to_field='namespace', related_name='client', on_delete=models.CASCADE, editable=False)
-    target = models.ForeignKey(Institution, to_field='namespace', related_name='target', null=True, blank=True, on_delete=models.CASCADE)
+    client = models.ForeignKey(Instance, to_field='namespace', related_name='client', on_delete=models.CASCADE, editable=False)
+    target = models.ForeignKey(Instance, to_field='namespace', related_name='target', null=True, blank=True, on_delete=models.CASCADE)
     token = models.CharField(max_length=50, editable=False)
     expiration = models.DateTimeField(blank=True, editable=False, default=timezone.now)
 
@@ -129,4 +136,3 @@ class Authentication(models.Model):
 
     def __str__(self):
         return self.authentication_identifier
-

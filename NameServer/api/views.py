@@ -11,23 +11,42 @@ from django.db.models import Q
 from .serializers import *
 
 
-class InstitutionViewSet(viewsets.GenericViewSet, mixins.ListModelMixin):
+class InstanceViewSet(viewsets.GenericViewSet, mixins.ListModelMixin):
     """
-    API endpoint that allows Institutions to be viewed or edited.
+    API endpoint that allows Instances to be viewed or edited.
     """
-    queryset = Institution.objects.all()
-    serializer_class = InstitutionSerializer
+    queryset = Instance.objects.all()
+    serializer_class = InstanceSerializer
     permission_classes = (permissions.IsAuthenticated,)
 
     lookup_value_regex = '[\w.@+-]+'
 
     def retrieve(self, request, pk=None):
         print(pk)
-        queryset = Institution.objects.get_by_natural_key(pk)
+        queryset = Instance.objects.get_by_natural_key(pk)
 
 
-        serializer = InstitutionSerializer(queryset)
+        serializer = InstanceSerializer(queryset)
         return Response(serializer.data)
+
+class GroupViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows Groups to be viewed or edited.
+    """
+    queryset = Group.objects.all()
+    serializer_class = GroupSerializer
+    permission_classes = (permissions.IsAuthenticated,)
+
+    lookup_value_regex = '[\w.@+-]+'
+
+    def retrieve(self, request, pk=None):
+        queryset = Group.objects.get_by_natural_key(pk)
+        serializer = GroupSerializer(queryset)
+        return Response(serializer.data)
+
+    def perform_create(self, serializer):
+        print("SALVO")
+        return serializer.save(owner=self.request.user)
 
 class LocationViewSet(viewsets.ModelViewSet):
     """
@@ -68,8 +87,8 @@ class DatasetViewSet(viewsets.ModelViewSet):
     def list(self, request):
 
         # TODO: Write it in a more proper way
-        other_institutions = Institution.objects.exclude(namespace=request.user.namespace)
-        queryset = Dataset.objects.all()#.exclude(allowed_to__in=other_institutions)
+        other_instances = Instance.objects.exclude(namespace=request.user.namespace)
+        queryset = Dataset.objects.all()#.exclude(allowed_to__in=other_instances)
 
         serializer = DatasetSerializer(queryset, many=True)
         return Response(serializer.data)
@@ -79,8 +98,8 @@ class DatasetViewSet(viewsets.ModelViewSet):
         # identifier: namespace + "." + name
 
         # TODO: Write it in a more proper way
-        other_institutions = Institution.objects.exclude(namespace=request.user.namespace)
-        allowed = Dataset.objects.all()#.exclude(allowed_to__in=other_institutions)
+        other_instances = Instance.objects.exclude(namespace=request.user.namespace)
+        allowed = Dataset.objects.all()#.exclude(allowed_to__in=other_instances)
 
         queryset = allowed.filter().annotate(identifier=Concat('namespace', V('.'), 'name'))
 

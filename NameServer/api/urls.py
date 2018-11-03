@@ -6,7 +6,8 @@ from . import views
 
 router = routers.DefaultRouter()
 router.register(r'dataset', views.DatasetViewSet)
-router.register(r'institution', views.InstitutionViewSet)
+router.register(r'instance', views.InstanceViewSet)
+router.register(r'group', views.GroupViewSet)
 router.register(r'location', views.LocationViewSet)
 router.register(r'authentication', views.AuthenticationViewSet)
 

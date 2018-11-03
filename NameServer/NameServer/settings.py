@@ -151,4 +151,4 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 # CUSTOM USER MODEL
-AUTH_USER_MODEL = 'api.Institution'
+AUTH_USER_MODEL = 'api.Instance'
