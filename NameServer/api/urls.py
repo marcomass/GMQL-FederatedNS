@@ -11,6 +11,7 @@ router.register(r'group', views.GroupViewSet)
 router.register(r'location', views.LocationViewSet)
 router.register(r'authentication', views.AuthenticationViewSet)
 
+
 urlpatterns = [
     url(r'^', include(router.urls))
 ]

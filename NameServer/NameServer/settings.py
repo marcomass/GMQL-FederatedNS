@@ -34,6 +34,14 @@ INSTALLED_APPS = [
     'api.apps.ApiConfig',
     'rest_framework',
     'rest_framework.authtoken',
+
+   # 'rest_framework_swagger',
+
+   # 'rest_auth',
+   #'django.contrib.sites',
+   #'allauth',
+   #'allauth.account',
+   # 'rest_auth.registration',
     
     'django.contrib.admin',
     'django.contrib.auth',
@@ -63,8 +71,9 @@ REST_FRAMEWORK = {
     ),
 
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework.authentication.BasicAuthentication',
+
         'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
         'rest_framework.authentication.TokenAuthentication'
     )
 }
@@ -107,7 +116,7 @@ WSGI_APPLICATION = 'NameServer.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'NAME':  os.environ.get('NAMESERVER_DB_PATH', os.path.join(BASE_DIR, 'db.sqlite3')),
     }
 }
 
@@ -115,21 +124,37 @@ DATABASES = {
 # Password validation
 # https://docs.djangoproject.com/en/1.11/ref/settings/#auth-password-validators
 
-AUTH_PASSWORD_VALIDATORS = [
-    {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    },
-]
+AUTH_PASSWORD_VALIDATORS = []
+#    [
+#    {
+#        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+#    },
+#    {
+#        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+#    },
+#    {
+#        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+#    },
+#    {
+#        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+#    },
+#]
 
+#SWAGGER_SETTINGS = {
+    #'LOGIN_URL': 'NameServer:login',
+    #'LOGOUT_URL': 'NameServer:logout',
+#    'USE_SESSION_AUTH': False,
+#    'DOC_EXPANSION': 'list',
+#    'APIS_SORTER': 'alpha',
+#    'SECURITY_DEFINITIONS': None,
+#}
+
+
+#EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+#REST_AUTH_REGISTER_SERIALIZERS = {
+#    'REGISTER_SERIALIZER': 'api.serializers.InstanceSerializer'
+#}
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.11/topics/i18n/
@@ -149,6 +174,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
 STATIC_URL = '/static/'
+
+SITE_ID = 1
 
 # CUSTOM USER MODEL
 AUTH_USER_MODEL = 'api.Instance'

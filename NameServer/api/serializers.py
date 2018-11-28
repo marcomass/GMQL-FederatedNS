@@ -1,16 +1,62 @@
+from rest_framework.relations import PrimaryKeyRelatedField
+
 from .models import *
 from rest_framework import serializers
+from django.contrib.auth import get_user_model
 
-class InstanceSerializer(serializers.HyperlinkedModelSerializer):
+class InstanceSerializer( serializers.ModelSerializer):
+
+    password = serializers.CharField(max_length=255, write_only=True,style={'input_type': 'password'})
+    creation_date = serializers.CharField(read_only=True)
+    instancename=serializers.CharField(source='username')
+
+    location  = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = Instance
-        fields = ('name', 'namespace', 'creation_date')
+        fields = ( 'instancename', 'description', 'email', 'password', 'creation_date', 'location')
 
-class GroupSerializer(serializers.HyperlinkedModelSerializer):
+    def create(self, validated_data):
+
+        user = get_user_model().objects.create_user(validated_data['description'],
+                                  validated_data['username'],
+                                  validated_data['email'],
+                                  validated_data['password'])
+
+        return user
+
+    def get_location(self, obj):
+        try:
+         return '{}.{}'.format(obj.username, obj.location.name)
+        except:
+         return None
+
+class CurrentInstanceSerializer( InstanceSerializer):
+
+    token = serializers.SerializerMethodField()
+    instancename = serializers.CharField(source='username')
+
+    class Meta:
+        model = Instance
+        fields = ( 'instancename', 'description', 'email', 'password', 'creation_date', 'location', 'token')
+
+
+    def get_token(self, obj):
+
+        token = Token.objects.get(user=obj)
+        return  token.key
+
+
+class GroupSerializer(serializers.ModelSerializer):
 
     identifier = serializers.SerializerMethodField()
-    instances = InstanceSerializer(read_only=True, many=True)
+
+    instances = serializers.SlugRelatedField(
+        many=True,
+        queryset=Instance.objects.all(),
+        #read_only=True,
+        slug_field='username'
+    )
 
     def get_identifier(self, obj):
         return obj.name
@@ -19,41 +65,53 @@ class GroupSerializer(serializers.HyperlinkedModelSerializer):
         model = Group
         fields = ('identifier', 'name', 'owner', 'instances')
 
-class LocationSerializer(serializers.HyperlinkedModelSerializer):
 
-    identifier = serializers.SerializerMethodField()
+class LocationSerializer(serializers.ModelSerializer):
 
-    def get_identifier(self, obj):
-        return '{}.{}'.format(obj.namespace_id, obj.name)
+    #identifier = serializers.SerializerMethodField()
+
+    #def get_identifier(self, obj):
+        #return '{}.{}'.format(obj.instance.username, obj.name)
+        #return '{}'.format(obj.instance.username)
 
     class Meta:
         model = Location
-        fields = ('identifier', 'name', 'details', 'URI', 'namespace')
+        fields = ('instance', 'name', 'details', 'URI')
+        read_only_fields = ('instance',)
 
 
-class DatasetSerializer(serializers.HyperlinkedModelSerializer):
+class DatasetSerializer(serializers.ModelSerializer):
 
     identifier = serializers.SerializerMethodField()
 
-    locations = LocationSerializer(read_only=True, many=True)
-    allowed_to_single = InstanceSerializer(read_only=True, many=True)
-    allowed_to_group = GroupSerializer(read_only=True, many=True)
+    copies = serializers.SlugRelatedField(
+        many=True,
+        queryset=Instance.objects.all(),
+        #read_only=True,
+        slug_field='username'
+    )
+    allowed_to = serializers.SlugRelatedField(
+        many=True,
+        queryset=Group.objects.all(),
+        #read_only=True,
+        slug_field='name'
+    )
+    pub_date = serializers.CharField(read_only=True)
 
     def get_identifier(self, obj):
-        return '{}.{}'.format(obj.namespace_id, obj.name)
+        return '{}.{}'.format(obj.owner_id, obj.name)
 
     class Meta:
         model = Dataset
-        fields = ('identifier', 'name', 'namespace', 'author', 'description', 'pub_date', 'locations', 'allowed_to_single', 'allowed_to_group')
+        fields = ('identifier', 'name', 'owner', 'author', 'description', 'pub_date', 'copies', 'allowed_to')
 
-class AuthenticationSerializer(serializers.HyperlinkedModelSerializer):
+class AuthenticationSerializer(serializers.ModelSerializer):
 
     identifier = serializers.SerializerMethodField()
 
     def get_identifier(self, obj):
-        return '{}_{}'.format(obj.client.namespace, obj.target.namespace)
+        return '{}_{}'.format(obj.client.username, obj.target.username)
 
     class Meta:
         model = Authentication
         fields = ('identifier', 'client', 'target', 'token', 'expiration')
-

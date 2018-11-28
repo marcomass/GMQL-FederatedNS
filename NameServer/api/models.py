@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-#from django.contrib.auth.base_user import BaseUserManager
+
 import uuid
 
+from django.contrib.auth.base_user import BaseUserManager
 from django.utils import timezone
 
 
@@ -22,27 +23,66 @@ def create_auth_token(sender, instance=None, created=False, **kwargs):
     if created:
         Token.objects.create(user=instance)
 
-class MyUserManager(UserManager):
-    def create_user(self, name, namespace, email, password=None, **extra_fields):
+class MyUserManager(BaseUserManager):
+    def create_user(self, description, username, email, password, **extra_fields):
+
+        if not username:
+            raise ValueError('Users must have an username')
+
         if not email:
             raise ValueError('Users must have an email address')
 
         if not password:
             raise ValueError('Users must have a password')
 
+
         user = self.model(
             email       = self.normalize_email(email),
-            namespace   = namespace,
-            name        = name
+            username = username,
+            description = description
         )
 
+        # If this is the first user give him admin rights
+        if Instance.objects.count() == 0:
+            print("First user. Assigning admin priviledges.")
+            user.is_admin = True
+            user.is_superuser = True
+            user.is_staff = True
+
+        else:
+            print("Ci sono "+str(Instance.objects.count())+" utenti")
+
         user.set_password(password)
-        user.username = namespace
         user.save(using=self._db)
+
+        # If this is the first user create the group "GMQL-ALL"
+        if Instance.objects.count() == 1:
+            group = Group()
+            group.owner = user
+            group.name = "GMQL-ALL"
+            group.save()
+
+
+        # Create a group with the name of this user and add this user
+        group = Group()
+        group.owner = user
+        group.name = user.username
+        group.save()
+        group.instances.add(user)
+        group.save()
+
+        # Add the user to group ALL
+        all = Group.objects.get(name="GMQL-ALL")
+        all.instances.add(user)
+        all.save()
+
         return user
 
-    def create_superuser(self, name, namespace, email,  password, **extra_fields):
-        user                = self.create_user( name, namespace, email, password)
+    def create_superuser(self, description, username, email,  password, **extra_fields):
+
+        print("Creating superuser")
+
+        user                = self.create_user( description, username, email, password)
         user.is_admin       = True
         user.is_superuser   = True
         user.is_staff       = True
@@ -50,63 +90,63 @@ class MyUserManager(UserManager):
         return user
 
 class Instance(AbstractUser):
-    name          = models.CharField(max_length=50, unique=True)
-    email         = models.EmailField(max_length=254, unique=True)
-    namespace     = models.CharField(max_length=50, unique=True)
-    creation_date = models.DateTimeField(default=timezone.now, blank=True)
+    email            = models.EmailField(max_length=254, unique=True)
+    description      = models.CharField(max_length=50, null=True)
+    creation_date    = models.DateTimeField(default=timezone.now, blank=True)
 
-    USERNAME_FIELD = 'namespace'
-    REQUIRED_FIELDS = ['name', 'email']
+    REQUIRED_FIELDS = ['email']
 
     objects = MyUserManager()
 
     def __str__(self):
-        return self.namespace + " ( " + self.name + " )"
+        return self.username
 
-class Group(models.Model):
-    name       = models.CharField(max_length=50, unique=True)
-    owner      = models.ForeignKey(Instance, to_field='namespace', on_delete=models.CASCADE, editable=False)
-    instances  = models.ManyToManyField(Instance, related_name='group_instance')
-
-    def __str__(self):
-        return self.name + " (created by " + self.owner.namespace + ")"
 
 class Location(models.Model):
     name = models.CharField(max_length=50)
     details = models.CharField(max_length=300)
     URI = models.CharField(max_length=100)
 
-    namespace =  models.ForeignKey(Instance, to_field='namespace', on_delete=models.CASCADE, editable=False)
-
-    @property
-    def location_identifier(self):
-        return self.namespace_id + "." + self.name
-
-    class Meta:
-        unique_together = (("name", "namespace"),)
+    instance = models.OneToOneField(
+        Instance,
+        on_delete=models.CASCADE,
+        to_field='username',
+        primary_key=True
+    )
 
     def __str__(self):
-        return self.URI + " ( " + self.location_identifier + " )"
+        return self.name + " ( " + self.URI + " )"
+
+class Group(models.Model):
+    name       = models.CharField(max_length=50, primary_key=True)
+    owner      = models.ForeignKey(Instance, to_field='username', on_delete=models.CASCADE, editable=False)
+
+    instances  = models.ManyToManyField(Instance, related_name='group_instance')
+
+    def __str__(self):
+        return self.name + " (created by " + self.owner.username + ")"
+
+
 
 class Dataset(models.Model):
     name = models.CharField(max_length=50)
-    author = models.CharField(max_length=50)
-    description = models.CharField(max_length=300)
+    author = models.CharField(max_length=50, default="")
+    description = models.CharField(max_length=300, default="")
     pub_date = models.DateTimeField(default=timezone.now)
 
-    namespace = models.ForeignKey(Instance, to_field='namespace', on_delete=models.CASCADE, editable=False)
+    owner = models.ForeignKey(Instance, to_field='username', on_delete=models.CASCADE, editable=False)
 
-    locations =  models.ManyToManyField(Location, related_name='dataset_location')
-    allowed_to_single = models.ManyToManyField(Instance, related_name='dataset_instance')
-    allowed_to_group = models.ManyToManyField(Group, related_name='dataset_group')
+    allowed_to = models.ManyToManyField(Group, related_name='dataset_group')
+
+    copies =  models.ManyToManyField(Instance, related_name='dataset_instance')
 
 
     @property
     def dataset_identifier(self):
-        return self.namespace_id + "." + self.name
+        return self.owner_id + "." + self.name
 
     class Meta:
-        unique_together = (("name", "namespace"),)
+        unique_together = (("name", "owner"),)
 
     def __str__(self):
         return self.dataset_identifier
@@ -115,8 +155,8 @@ class Authentication(models.Model):
 
     EXPIRATION_DAYS = 14
 
-    client = models.ForeignKey(Instance, to_field='namespace', related_name='client', on_delete=models.CASCADE, editable=False)
-    target = models.ForeignKey(Instance, to_field='namespace', related_name='target', null=True, blank=True, on_delete=models.CASCADE)
+    client = models.ForeignKey(Instance, to_field='username', related_name='client', on_delete=models.CASCADE, editable=False)
+    target = models.ForeignKey(Instance, to_field='username', related_name='target', null=True, blank=True, on_delete=models.CASCADE)
     token = models.CharField(max_length=50, editable=False)
     expiration = models.DateTimeField(blank=True, editable=False, default=timezone.now)
 
@@ -128,8 +168,7 @@ class Authentication(models.Model):
 
     @property
     def authentication_identifier(self):
-        return str(self.client.namespace) + "_" + self.target.namespace
-
+        return str(self.client.username) + "_" + self.target.username
 
     class Meta:
         unique_together = (("client", "target"),)
