@@ -156,7 +156,7 @@ class Authentication(models.Model):
     EXPIRATION_DAYS = 14
 
     client = models.ForeignKey(Instance, to_field='username', related_name='client', on_delete=models.CASCADE, editable=False)
-    target = models.ForeignKey(Instance, to_field='username', related_name='target', null=True, blank=True, on_delete=models.CASCADE)
+    target = models.ForeignKey(Instance, to_field='username', related_name='target', on_delete=models.CASCADE)
     token = models.CharField(max_length=50, editable=False)
     expiration = models.DateTimeField(blank=True, editable=False, default=timezone.now)
 
