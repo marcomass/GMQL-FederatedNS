@@ -157,7 +157,7 @@ class DatasetViewSet(viewsets.ModelViewSet):
 
         # Retrieve current user's groups
         groups = Group.objects.filter(instances__in=[request.user.id]).values_list('name', flat=True)
-        datasets  = Dataset.objects.filter(allowed_to__in=groups).annotate(identifier=Concat('owner_id', V('.'), 'name'))
+        datasets  = Dataset.objects.filter(allowed_to__in=groups).distinct().annotate(identifier=Concat('owner_id', V('.'), 'name'))
 
         serializer = DatasetSerializer(datasets, many=True)
         return Response(serializer.data)
@@ -165,12 +165,11 @@ class DatasetViewSet(viewsets.ModelViewSet):
     def retrieve(self, request, pk=None):
 
         groups = Group.objects.filter(instances__in=[request.user.id]).values_list('name', flat=True)
-        datasets = Dataset.objects.filter(allowed_to__in=groups)
+        datasets = Dataset.objects.filter(allowed_to__in=groups).distinct().annotate(identifier=Concat('owner_id', V('.'), 'name'))
 
-        queryset = datasets.annotate(identifier=Concat('owner_id', V('.'), 'name'))
 
         # Notice that 404 is returned both when it does not exist or when the user is not allowed to see it
-        dataset = get_object_or_404(queryset, identifier = pk )
+        dataset = get_object_or_404(datasets, identifier = pk )
 
         serializer = DatasetSerializer(dataset)
         return Response(serializer.data)
