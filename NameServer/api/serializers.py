@@ -27,7 +27,7 @@ class InstanceSerializer( serializers.ModelSerializer):
 
     def get_location(self, obj):
         try:
-         return '{}.{}'.format(obj.username, obj.location.name)
+         return '{}'.format(obj.username)
         except:
          return None
 
