@@ -46,16 +46,36 @@ where `LOCAL-FOLDER` and `PORT` are two optional parameters:
 - `LOCAL-FOLDER` : absolute path to the dabase folder in the local filesystem (by default uses the folder `data` automatically created in the working directory)
 - `PORT` running port of the nameserver (default 8888)
 
-## Creating users
+## User creation and API Authentication
 ### Admin account
 Admin priviledges are assigned to the first user that registers on the nameserver. 
-## Registration and login
+### Registration and login
 Assuming the nameserver is running on `http://localhost:8888`, you can register a new user using the Django web rest UI:
 
 - Open `http://localhost:8888/api/instance/` in your browser and use the form to setup your account.
 - Once registered, use the login button in the top-right corner of the page to sign in. 
 - After login you will be able to browse the whole UI (whose entry point is at: `http://localhost:8888/api/`).
 
+### API Authentication
+A registered user can retrieve his API token performing a `GET` call on his instance's entity: 
+```
+http://localhost:8888/api/instance/[INSTANCENAME]
+```
+Example answer:
+```
+HTTP 200 OK
+Allow: GET, HEAD, OPTIONS
+Content-Type: application/json
+Vary: Accept
 
+{
+    "instancename": "exampleinstance",
+    "description": "Example User",
+    "email": "example@polimi.it",
+    "creation_date": "2018-11-29 14:02:02.454539+00:00",
+    "location": "exampleinstance",
+    "token": "XXXXXXXXXXXXXXX"
+}
+```
 
 
