@@ -63,7 +63,7 @@ A registered user can retrieve his API token performing a `GET` call on his inst
 http://localhost:8888/api/instance/[INSTANCENAME]
 ```
 Example answer:
-``` HTML
+``` HTTP
 HTTP 200 OK
 Allow: GET, HEAD, OPTIONS
 Content-Type: application/json
