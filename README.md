@@ -28,11 +28,11 @@ Create the migrations:
 ```
 python api/manage.py makemigrations
 ```
-Build the database :
+Build the database:
 ```
 python api/manage.py migrate
   ```
-Start the application at localhost port 8800
+Start the application at localhost port 8800:
 ```
 python api/manage.py runserver 0.0.0.0:8800
 ```
@@ -56,13 +56,15 @@ Assuming the nameserver is running on `http://localhost:8888`, you can register 
 - Once registered, use the login button in the top-right corner of the page to sign in. 
 - After login you will be able to browse the whole UI (whose entry point is at: `http://localhost:8888/api/`).
 
-### API Authentication
+## API Authentication and GMQL configuration
+
+### Obtaining the API Token
 A registered user can retrieve his API token performing a `GET` call on his instance's entity: 
 ```
 http://localhost:8888/api/instance/[INSTANCENAME]
 ```
 Example answer:
-```
+``` HTML
 HTTP 200 OK
 Allow: GET, HEAD, OPTIONS
 Content-Type: application/json
@@ -77,5 +79,20 @@ Vary: Accept
     "token": "XXXXXXXXXXXXXXX"
 }
 ```
+
+### Setting up GMQL
+In order to enable GMQL-Federated in your GMQL instance, add the following properties to your `repository.xml` file:
+``` XML
+    <property name="GF_ENABLED">true</property>
+    <property name="GF_NAMESERVER_ADDRESS">http://..../</property>
+    <property name="GF_INSTANCENAME">...</property>
+    <property name="GF_TOKEN">...</property>
+```
+
+where: 
+- `GF_ENABLED`: tells the syste wheter to enable or disable GMQL-Federated  functionalities (default: `false`)
+- `GF_NAMESERVER_ADDRESS`: the Nameserver address (either the one provided by Politecnico di Milano or your own)
+- `GF_INSTANCENAME`: the instance identifier that you use to login to the nameserver 
+- `GF_TOKEN`: your API token
 
 
