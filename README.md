@@ -1,4 +1,4 @@
-# GMQL-FederatedNS
+# GMQL-Federated Nameserver
 The Nameserver for GMQL-Federated provides name-resolution for federated datasets. Registered users can share their datasets with otherusers or groups of users. Moreover, the nameserver releases authentication tokens for comminication between two GMQL instances.
 
 
