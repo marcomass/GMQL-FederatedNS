@@ -56,7 +56,6 @@ Assuming the nameserver is running on `http://localhost:8888`, you can register 
 - Once registered, use the login button in the top-right corner of the page to sign in. 
 - After login you will be able to browse the whole UI (whose entry point is at: `http://localhost:8888/api/`).
 
-## API Authentication and GMQL configuration
 
 ### Obtaining the API Token
 A registered user can retrieve his API token performing a `GET` call on his instance's entity: 
@@ -80,7 +79,7 @@ Vary: Accept
 }
 ```
 
-### Setting up GMQL
+## Setting up GMQL
 In order to enable GMQL-Federated in your GMQL instance, add the following properties to your `repository.xml` file:
 ``` XML
     <property name="GF_ENABLED">true</property>
