@@ -26,15 +26,15 @@ You can set a custom folder using the environment variable 'NAMESERVER_DB_PATH' 
 
 Create the migrations: 
 ```
-python api/manage.py makemigrations
+python manage.py makemigrations
 ```
 Build the database:
 ```
-python api/manage.py migrate
+python manage.py migrate
   ```
 Start the application at localhost port 8800:
 ```
-python api/manage.py runserver 0.0.0.0:8800
+python manage.py runserver 0.0.0.0:8800
 ```
 
 ### Running within Docker
