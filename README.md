@@ -1,6 +1,19 @@
 # GMQL-Federated Nameserver
-The Nameserver for GMQL-Federated provides name-resolution for federated datasets. Registered users can share their datasets with otherusers or groups of users. Moreover, the nameserver releases authentication tokens for comminication between two GMQL instances.
+The Nameserver for GMQL-Federated provides name-resolution for federated datasets. Registered users can share their datasets with other users or groups of users. Moreover, the nameserver releases authentication tokens for comminication between two GMQL instances.
 
+## Quick Start
+Download this project and make sure that the <a href="https://docs.docker.com/v17.09/engine/admin/" target="_blank">docker daemon</a> is running on your machine. 
+
+Go into the project directory and run the following script to start the nameserver:
+```
+sbin/start-nameserver
+```
+Use your favourite web-browser to access the web interface at port 8888 (http://localhost:8888/).
+
+Stop the nameserver running the following script: 
+```
+sbin/start-nameserver
+```
 
 ## Requirements
 ### Running as a Django Application
@@ -40,44 +53,36 @@ python manage.py runserver 0.0.0.0:8800
 ### Running within Docker
 If you want to run the application within a Docker container, call the provided script:
 ```
-start-nameserver [LOCAL-FOLDER] [PORT]
+sbin/start-nameserver [LOCAL-FOLDER] [PORT]
 ```
 where `LOCAL-FOLDER` and `PORT` are two optional parameters:
 - `LOCAL-FOLDER` : absolute path to the dabase folder in the local filesystem (by default uses the folder `data` automatically created in the working directory)
 - `PORT` running port of the nameserver (default 8888)
 
+Stop the nameserver running the following script:
+```
+sbin/start-nameserver [LOCAL-FOLDER] [PORT]
+```
+
 ## User creation and API Authentication
 ### Admin account
 Admin priviledges are assigned to the first user that registers on the nameserver. 
 ### Registration and login
-Assuming the nameserver is running on `http://localhost:8888`, you can register a new user using the Django web rest UI:
+Assuming the nameserver is running on `http://localhost:8888`, you can login and register a new user using the nameserver web interface:
 
-- Open `http://localhost:8888/api/instance/` in your browser and use the form to setup your account.
-- Once registered, use the login button in the top-right corner of the page to sign in. 
-- After login you will be able to browse the whole UI (whose entry point is at: `http://localhost:8888/api/`).
+- Open `http://localhost:8888/` in your browser and use the form to setup your account.
+
+
+![signup](https://github.com/DEIB-GECO/GMQL-FederatedNS/raw/master/screenshots/signup.png)
+
+![login](https://github.com/DEIB-GECO/GMQL-FederatedNS/raw/master/screenshots/login.png)
+
 
 
 ### Obtaining the API Token
-A registered user can retrieve his API token performing a `GET` call on his instance's entity: 
-```
-http://localhost:8888/api/instance/[INSTANCENAME]
-```
-Example answer:
-``` HTTP
-HTTP 200 OK
-Allow: GET, HEAD, OPTIONS
-Content-Type: application/json
-Vary: Accept
+The API token for your GMQL installation is displayed in the home page of the web interface after login.
 
-{
-    "instancename": "exampleinstance",
-    "description": "Example User",
-    "email": "example@polimi.it",
-    "creation_date": "2018-11-29 14:02:02.454539+00:00",
-    "location": "exampleinstance",
-    "token": "XXXXXXXXXXXXXXX"
-}
-```
+![signup](https://github.com/DEIB-GECO/GMQL-FederatedNS/raw/master/screenshots/home.png)
 
 ## Setting up GMQL
 In order to enable GMQL-Federated in your GMQL instance, add the following properties to your `repository.xml` file:
