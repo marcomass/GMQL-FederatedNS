@@ -1,0 +1,45 @@
+<br>
+<div class="row">
+    <div class="col-md-7">
+        <h2>Groups</h2>
+        <p>The following is the list of groups available in the federation:</p>  
+    </div>
+    <div class="col-md-5 ">
+        <a href="#!/groups/create" class="btn btn-success float-right">Create a new group</a>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12" ng-if="groups.length == 0" style="margin-top: 10px">
+        No groups available. <br><br>Use this interface to create a new group.
+    </div>
+</div>
+
+
+<table class="table table-striped" ng-if="groups.length > 0">
+    <thead>
+        <tr>
+            <th>Identifier</th>
+            <th>Owner</th>
+            <th>Instances</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr ng-repeat="gp in groups" ng-if="gp.instances.length>1 || gp.identifier=='GMQL-ALL'">
+            <td>
+                <a ng-if="gp.owner==logged_user.instancename && gp.identifier!='GMQL-ALL'" href="#!/groups/edit/{{gp.identifier}}">{{gp.identifier}}</a>
+                <span ng-if="gp.owner!=logged_user.instancename || gp.identifier=='GMQL-ALL'">{{gp.identifier}}</span>
+            </td>
+            <td>{{gp.owner}}</td>
+            <td>
+                <ul ng-if="gp.identifier!='GMQL-ALL'">
+                    <li ng-repeat="i in gp.instances">{{i}}</li>
+                </ul>
+                <ul ng-if="gp.identifier=='GMQL-ALL'">
+                    <li>All instances belong to this group.</li>
+                </ul>
+            </td>
+        </tr>
+
+    </tbody>
+</table>

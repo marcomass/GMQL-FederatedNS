@@ -1,0 +1,54 @@
+<br>
+<div class="row">
+    <div class="col-md-7">
+        <h2>Datasets</h2>
+        <p ng-if="datasets.length > 0">The following is the list of datasets available to you</p>  
+    </div>
+    <div class="col-md-5 ">
+        <a href="#!/datasets/create" class="btn btn-success float-right">Add a new dataset</a>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12" ng-if="datasets.length == 0" style="margin-top: 10px">
+        No datasets available. <br><br>Use this interface to share a dataset from your public repository with the federation.
+    </div>
+</div>
+
+<table class="table table-striped" ng-if="datasets.length > 0">
+    <thead>
+        <tr>
+            <th>Identifier</th>
+            <th>Name</th>
+            <th>Owner</th>
+            <th>Author</th>
+            <th>Description</th>
+            <th>Allowed to</th>
+            <th>Located at</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr ng-repeat="ds in datasets">
+            <td>
+                <a ng-if="ds.owner==logged_user.instancename" href="#!/datasets/edit/{{ds.identifier}}">{{ds.identifier}}</a>
+                <span ng-if="ds.owner!=logged_user.instancename">{{ds.identifier}}</span>
+            
+            </td>
+            <td>{{ds.name}}</td>
+            <td>{{ds.owner}}</td>
+            <td>{{ds.author}}</td>
+            <td>{{ds.description}}</td>
+            <td>
+                <ul>
+                    <li ng-repeat="e in ds.allowed_to">{{e}}</li>
+                </ul>
+            </td>
+            <td>
+                <ul>
+                    <li ng-repeat="e in ds.copies">{{e}}</li>
+                </ul>
+            </td>
+        </tr>
+
+    </tbody>
+</table>

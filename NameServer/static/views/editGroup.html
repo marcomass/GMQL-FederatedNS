@@ -1,0 +1,91 @@
+<div class="row justify-content-center" style="margin-top:50px; margin-bottom: 50px;">
+    <div class="col-md-9">
+        <div class="card">
+            <div class="card-header">Edit group <b>{{dataset_id}}</b></div>
+            <div class="card-body">
+                <form ng-submit="save_changes(group)">
+
+                    <div class="form-group row">
+                        <label for="name" class="col-md-3 col-form-label text-md-right"><b>Name</b></label>
+                        <div class="col-md-8">
+                            <input ng-model="group.name" 
+                                   type="text" id="name" class="form-control" name="name" 
+                                   placeholder="example: polimi_marionegri" required autofocus>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <label for="instances" class="col-md-3 col-form-label text-md-right">Instances</label>
+                    </div>
+
+                    <div class="row">
+                        <div for="instances" class="col-md-5 offset-md-3">Available instances:</div>
+                        <div for="instances" class="col-md-4">Selected instances:</div>
+                    </div>
+
+                    <div class="form-group row">
+
+                        <div class="col-md-4 offset-md-3">
+                            <select ng-model="instaLeftSelection" multiple class="form-control" id="allowed_to"
+                                    style="min-height: 10em">
+                                <option ng-repeat="g in instances">
+                                    {{g.instancename}}
+                                </option>
+                            </select>
+
+                        </div>
+
+                        <div class="col-md-1">
+                            <button type="button" id="multiselect_rightSelected" 
+                                    ng-click="moveItems(instaLeftSelection, group.instances)"
+                                    class="btn btn-block btn-multisel"><i class="fas fa-chevron-right"></i></button>
+                        </div>
+
+                        <div class="col-md-4"  style="max-height: 10em; overflow-y: scroll;">
+                            <div style="border: 1px solid #ced4da; min-height: 10em;">
+
+                                <table class="table table-striped selection">
+                                    <tbody>
+                                        <tr ng-repeat="i in group.instances">
+                                            <td>{{i}}</td>
+                                            <td >
+                                                <a ng-if="i!=logged_user.instancename"
+                                                   href="" ng-click="group.instances = deleteItem(i, group.instances)">remove</a>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="row" style="margin-top: 40px;">
+                        <div class="col-md-7">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <a href="#!/groups" class="btn btn-light">Back</a>
+                                </div>
+                                <div class="col-md-9">
+                                    <div class="alert-message text-left" id="alert-message"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <button type="submit" class="btn btn-primary float-right" style="margin-left: 10px">
+                                Save
+                            </button>
+                            <a href="" class="btn btn-danger float-right" ng-click="delete(group_id)">
+                                Delete
+                            </a>
+
+                        </div>
+                    </div>
+
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+

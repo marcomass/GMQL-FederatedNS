@@ -1,0 +1,4 @@
+#!/bin/bash
+docker stop gmql-fed-ns
+docker rm gmql-fed-ns
+echo "NameServer stopped."

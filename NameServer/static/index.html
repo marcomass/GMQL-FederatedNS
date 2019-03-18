@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en" class="h-100">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta name="description" content="GMQL-Federated NameServer">
+        <meta name="author" content="Andrea Gulino">
+        <title>Name Server</title>
+
+        <!-- Libs CSS -->
+        <link href="libs/bootstrap-4/css/bootstrap.min.css" type="text/css" rel="stylesheet">
+        <link href="libs/fontawesome/css/all.min.css" type="text/css" rel="stylesheet">
+        <link href="libs/prismjs/prism.css" type="text/css" rel="stylesheet">
+
+
+        <!-- Custom CSS -->
+        <link href="css/style.css" type="text/css" rel="stylesheet">
+
+        <style></style>
+
+    </head>
+    <body class="d-flex flex-column h-100" ng-app="app" ng-controller="ns_ctrl as main">
+        <header>
+
+            <!-- Fixed navbar -->
+            <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+                <a class="navbar-brand" href="/">Name Server</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarCollapse">
+                    <ul class="navbar-nav mr-auto" ng-if="logged">
+                        <li class="nav-item {{active_menu=='home'?'active':''}}">
+                            <a class="nav-link" href="#!/home">Home <span class="sr-only">(current)</span></a>
+                        </li>
+                        <li class="nav-item {{active_menu=='datasets'?'active':''}}">
+                            <a class="nav-link" href="#!/datasets">Datasets</a>
+                        </li>
+                        <li class="nav-item {{active_menu=='instances'?'active':''}}">
+                            <a class="nav-link" href="#!/instances" tabindex="-1" aria-disabled="true">Instances</a>
+                        </li>
+                        <li class="nav-item {{active_menu=='groups'?'active':''}}">
+                            <a class="nav-link" href="#!/groups" tabindex="-1" aria-disabled="true">Groups</a>
+                        </li>
+                    </ul>
+                    <form class="form-inline mt-2 mt-md-0" ng-submit="logout()" ng-if="logged">
+                        <button class="btn btn-outline-warning my-2 my-sm-0" type="submit">Logout</button>
+                    </form>
+                </div>
+            </nav>
+
+        </header>
+
+        <!-- Begin page content -->
+        <main role="main" class="flex-shrink-0">
+            <div class="container">
+                <div ng-view></div>      
+            </div>
+        </main>
+
+        <footer class="footer mt-auto py-3">
+            <div class="container">
+                <span class="text-muted">&copy; GeCo - Politecnico di Milano - View it on <a target="_blank" href="https://github.com/DEIB-GECO/GMQL-FederatedNS">GitHub</a>.</span>
+            </div>
+        </footer>
+
+        <!-- JS -->
+        <script src="libs/jquery/jquery-3.3.1.min.js"></script>
+        <script src="libs/jquery-cookies/jquery.cookie.js"></script>
+        <script src="libs/popperjs/popper.min.js"></script>
+        <script src="libs/bootstrap-4/js/bootstrap.min.js"></script>
+        <script src="libs/fontawesome/js/fontawesome.min.js"></script>
+        <script src="libs/prismjs/prism.js"></script>
+        <script src="libs/angularjs/angular.min.js"></script>
+        <script src="libs/angularjs/angular-route.min.js"></script>
+
+        <script src="js/support.js"></script>
+        <script src="js/api.js"></script>
+
+        <script src="js/app.js"></script>
+        <script src="js/controller.js"></script>
+
+    </body>
+</html>
+

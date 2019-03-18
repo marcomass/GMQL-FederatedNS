@@ -1,0 +1,41 @@
+#!/bin/bash
+
+SCRIPT_PATH="`dirname \"$0\"`"
+
+echo "$SCRIPT_PATH"/../
+
+# START DOCKER IF IT IS NOT RUNNING
+pgrep -f docker > /dev/null || echo "Please start the docker daemon before running this script." 
+
+# SET LOCAL FOLDER FOR DB FILE
+if [ -z "$1" ]
+  then
+   mkdir $(pwd)/data
+   SRC="$(pwd)/data"
+  else
+   SRC=$1
+fi
+
+echo "Database local folder: $SRC"
+
+# SET APPLICATION PORT
+if [ -z "$2" ]
+  then
+   PORT=8888
+  else
+   PORT=$2
+fi
+
+echo "Port: $PORT"
+
+# BUILD
+docker build "$SCRIPT_PATH"/../ -t nameserver --build-arg db=/external/db.sqlite3
+
+# RUN
+docker run -p $PORT:8800 --mount type=bind,source="$SRC",target=/external --name gmql-fed-ns --detach nameserver 
+
+sleep 5
+echo "Server running at http://127.0.0.1:$PORT"
+
+# OPEN BROWSER
+open http://127.0.0.1:$PORT

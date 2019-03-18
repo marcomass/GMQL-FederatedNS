@@ -1,0 +1,59 @@
+<br>
+<h2>
+    <i class="fas fa-user-circle"  style="color: #6b6b6b;font-size: 1.2em; "></i>
+    {{logged_user.instancename}}
+</h2>
+<hr>
+
+<div id="tokenBlock" style="height:300px;">
+    <p>Your <code>token</code> for communication with the NameServer is: </p>  
+    <div class="row justify-content-left">
+        <div class="col-6">
+            <form>
+                <div class="form-group">
+                    <div class="input-group mb-3" id="show_hide_token">
+                        <input class="form-control" type="password" aria-describedby="token"
+                               value="{{logged_user.token}}">
+                        <div class="input-group-append">
+                            <span style="cursor:pointer" class="input-group-text" id="basic-addon2" ng-click="toggleHideToken()">
+                                <i class="fa fa-eye{{hideToken?'-slash':''}}" aria-hidden="true"></i>
+                            </span>  
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="repoxml">
+        <p>You should have the following configuration in your repository.xml file:</p>
+        <pre class="language-markup"><code class="language-markup"></code></pre>
+    </div>
+
+</div>
+
+<p>Your instance URL is the following:</p>  
+
+
+<div class="row justify-content-left">
+    <div class="col-6">
+
+        <div class="alert alert-dismissible fade show" role="alert" id="alert">
+            <button type="button" class="close" ng-click="closeAlert()" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <span id="alert-text"></span>
+        </div>
+
+        <form ng-submit="saveLocation(logged_user.location)">
+            <div class="form-group">
+                <div class="input-group mb-3">
+                    <input type="url" class="form-control" placeholder="http://your-domain.com/gmql-rest/" aria-label="http://your-domain.com/gmql-rest/" aria-describedby="location-input" ng-model="logged_user.location" required>
+                    <div class="input-group-append">
+                        <button class="btn btn-outline-primary" type="submit">Save</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

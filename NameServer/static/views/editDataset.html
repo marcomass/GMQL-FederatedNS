@@ -1,0 +1,158 @@
+<div class="row justify-content-center" style="margin-top:50px; margin-bottom: 50px;">
+    <div class="col-md-10">
+        <div class="card">
+            <div class="card-header">Edit dataset <b>{{dataset_id}}</b></div>
+            <div class="card-body">
+                <form ng-submit="save_changes(dataset)">
+
+                    <div class="form-group row">
+                        <label for="name" class="col-md-3 col-form-label text-md-right"><b>Name</b></label>
+                        <div class="col-md-9">
+                            <input ng-model="dataset.name"  id="datasetName"
+                                   type="text" id="name" class="form-control" name="name" 
+                                   placeholder="example: HG19_ENCODE_BROAD" required autofocus>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label for="author" class="col-md-3 col-form-label text-md-right">Author</label>
+                        <div class="col-md-9">
+                            <input ng-model="dataset.author" 
+                                   type="text" id="author" class="form-control" name="author" 
+                                   placeholder="ENCODE Project"autofocus>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label for="description" class="col-md-3 col-form-label text-md-right">Description</label>
+                        <div class="col-md-9">
+                            <textarea ng-model="dataset.description"  rows="5"
+                                      type="text" id="description" class="form-control" name="description" 
+                                      placeholder="ENCODE data mapped to HG19 human genome. Broad (or Regions) Peaks format is selected and archived/revoked data are avoided. The release date of this dataset is August 2017. https://www.encodeproject.org/ "  autofocus></textarea>
+
+                        </div>
+                    </div>
+
+
+                    <div class="row">
+                        <label for="allowed_to" class="col-md-3 col-form-label text-md-right">Privacy</label>
+                    </div>
+
+                    <div class="row">
+                        <div for="allowed_to" class="col-md-5 offset-md-3">Available instances:</div>
+                        <div for="allowed_to" class="col-md-4">Selected instances:</div>
+                    </div>
+
+                    <div class="form-group row">
+
+                        <div class="col-md-4 offset-md-3">
+                            <select ng-model="groupLeftSelection" multiple class="form-control" id="allowed_to"
+                                    style="min-height: 10em">
+                                <option ng-repeat="g in groups" value="{{g.identifier}}">
+                                    {{g.name}} {{g.instances.length>1?'(Group)':''}}
+                                </option>
+                            </select>
+
+                        </div>
+
+                        <div class="col-md-1">
+                            <button type="button" id="multiselect_rightSelected" 
+                                    ng-click="moveItems(groupLeftSelection, dataset.allowed_to)"
+                                    class="btn btn-block btn-multisel"><i class="fas fa-chevron-right"></i></button>
+                        </div>
+
+                        <div class="col-md-4"  style="max-height: 10em; overflow-y: scroll;">
+                            <div style="border: 1px solid #ced4da; min-height: 10em;">
+
+                                <table class="table table-striped selection">
+                                    <tbody>
+                                        <tr ng-repeat="i in dataset.allowed_to">
+                                            <td>{{i}}</td>
+                                            <td >
+                                                <a ng-if="i!=logged_user.instancename"
+                                                   href="" ng-click="dataset.allowed_to = deleteItem(i, dataset.allowed_to)">remove</a>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <label for="allowed_to" class="col-md-3 col-form-label text-md-right">Repositories</label>
+                    </div>
+
+                    <div class="row">
+                        <div for="allowed_to" class="col-md-5 offset-md-3">Available instances:</div>
+                        <div for="allowed_to" class="col-md-4">Selected instances:</div>
+                    </div>
+
+                    <div class="form-group row">
+
+                        <div class="col-md-4 offset-md-3">
+                            <select ng-model="instaLeftSelection" multiple class="form-control" id="allowed_to"
+                                    style="min-height: 10em">
+                                <option ng-repeat="g in instances">
+                                    {{g.instancename}}
+                                </option>
+                            </select>
+
+                        </div>
+
+                        <div class="col-md-1">
+                            <button type="button" id="multiselect_rightSelected" 
+                                    ng-click="moveItems(instaLeftSelection, dataset.copies)"
+                                    class="btn btn-block btn-multisel"><i class="fas fa-chevron-right"></i></button>
+                        </div>
+
+                        <div class="col-md-4"  style="max-height: 10em; overflow-y: scroll;">
+                            <div style="border: 1px solid #ced4da; min-height: 10em;">
+
+                                <table class="table table-striped selection">
+                                    <tbody>
+                                        <tr ng-repeat="i in dataset.copies">
+                                            <td>{{i}}</td>
+                                            <td >
+                                                <a ng-if="i!=logged_user.instancename"
+                                                   href="" ng-click="dataset.copies = deleteItem(i, dataset.copies)">remove</a>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                        </div>
+                    </div>
+
+
+                    <div class="row" style="margin-top: 40px;">
+                        <div class="col-md-8">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <a href="#!/datasets" class="btn btn-light">Back</a>
+                                </div>
+                                <div class="col-md-9">
+                                    <div class="alert-message text-left" id="alert-message"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <button type="submit" class="btn btn-primary float-right" style="margin-left: 10px">
+                                Save
+                            </button>
+                            <a href="" class="btn btn-danger float-right" ng-click="delete(dataset_id)">
+                                Delete
+                            </a>
+
+                        </div>
+                    </div>
+
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+

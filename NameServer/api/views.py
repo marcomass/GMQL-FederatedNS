@@ -21,6 +21,16 @@ class IsAuthenticatedOrPostOnly(BasePermission):
         return (request.user and request.user.is_authenticated) or request.method in ['POST', 'GET']
 
 
+class CustomObtainAuthToken(ObtainAuthToken):
+
+    def post(self, request, *args, **kwargs):
+        response = super(CustomObtainAuthToken, self).post(request, *args, **kwargs)
+        token = Token.objects.get(key=response.data['token'])
+
+        instance = Instance.objects.get(id=token.user_id)
+
+        return Response({'token': token.key, 'instancename':instance.username })
+
 class InstanceViewSet(viewsets.GenericViewSet, mixins.ListModelMixin, mixins.CreateModelMixin):
     """
     API endpoint that allows Instances to be viewed or edited.

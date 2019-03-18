@@ -1,0 +1,41 @@
+main > .container {
+    padding: 60px 15px 0;
+}
+
+.footer {
+    background-color: #f5f5f5;
+}
+
+.footer > .container {
+    padding-right: 15px;
+    padding-left: 15px;
+}
+
+code {
+    font-size: 80%;
+}
+
+
+
+/* Login */
+.alert-message {
+    line-height: 38px;
+}
+
+.alert-message.wrong {
+    color: #dc3545;
+}
+
+.alert-message.ok {
+    color: green;
+}
+
+.btn-multisel {
+    height:30px;
+    line-height: 20px;
+    font-size: 15px;
+}
+
+table.selection td, table.selection th{
+    padding: 0;
+}

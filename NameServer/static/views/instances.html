@@ -1,0 +1,37 @@
+<br>
+<div class="row">
+    <div class="col-md-7">
+        <h2>Instances</h2>
+        <p>The following is the list of instances available in the federation:</p>  
+    </div>
+    <div class="col-md-5 "></div>
+</div>
+
+<div class="row">
+    <div class="col-md-12" ng-if="instances.length == 0" style="margin-top: 10px">
+        No instances available.
+    </div>
+</div>
+
+
+<table class="table table-striped" ng-if="instances.length > 0">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Email</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr ng-repeat="ins in instances">
+            <td>
+                {{ins.instancename}}
+            </td>
+            <td>{{ins.description}}</td>
+            <td>
+               <a href = "mailto: {{ins.email}}">{{ins.email}}</a>
+            </td>
+        </tr>
+
+    </tbody>
+</table>
