@@ -12,7 +12,7 @@ Use your favourite web-browser to access the web interface at port 8888 (http://
 
 Stop the nameserver running the following script: 
 ```
-sbin/start-nameserver
+sbin/stop-nameserver
 ```
 
 ## Requirements
@@ -61,7 +61,7 @@ where `LOCAL-FOLDER` and `PORT` are two optional parameters:
 
 Stop the nameserver running the following script:
 ```
-sbin/start-nameserver [LOCAL-FOLDER] [PORT]
+sbin/stop-nameserver
 ```
 
 ## User creation and API Authentication
