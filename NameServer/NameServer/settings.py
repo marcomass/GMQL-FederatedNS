@@ -92,6 +92,8 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'NameServer.urls'
 
+APPEND_SLASH = True
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
