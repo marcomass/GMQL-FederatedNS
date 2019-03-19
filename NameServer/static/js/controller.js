@@ -102,7 +102,7 @@ app.controller('home_ctrl', function($scope, $http, $rootScope) {
         tk = hide? "...." : $rootScope.logged_user.token;
 
         confString = '<property name="GF_ENABLED">true</property>\n'+
-            '<property name="GF_NAMESERVER_ADDRESS">http://'+window.location.host+'/</property>\n'+
+            '<property name="GF_NAMESERVER_ADDRESS">http://'+window.location.host.replace(/\/$/, "")+'/</property>\n'+
             '<property name="GF_INSTANCENAME">'+$rootScope.logged_user.instancename+'</property>\n'+
             '<property name="GF_TOKEN">'+tk+'</property>'
 
