@@ -1,4 +1,13 @@
 #!/bin/bash
+RUNNING="$(docker container ls | grep gmql-fed-ns | wc -l)"
+if [ "$RUNNING" -eq "1" ]
+then
+	echo "Stopping Name Server.."
+else
+	echo "Name Server is not running."
+	exit 1
+fi
+
 docker stop gmql-fed-ns
 docker rm gmql-fed-ns
-echo "NameServer stopped."
+echo "Stopped."

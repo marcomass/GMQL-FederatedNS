@@ -2,19 +2,25 @@
 
 SCRIPT_PATH="`dirname \"$0\"`"
 
-echo "$SCRIPT_PATH"/../
-
 # START DOCKER IF IT IS NOT RUNNING
 pgrep -f docker > /dev/null || echo "Please start the docker daemon before running this script." 
 
 # SET LOCAL FOLDER FOR DB FILE
 if [ -z "$1" ]
   then
-   mkdir $(pwd)/data
+   mkdir -p $(pwd)/data
    SRC="$(pwd)/data"
   else
    SRC=$1
 fi
+
+RUNNING="$(docker container ls | grep gmql-fed-ns | wc -l)"
+if [ "$RUNNING" -eq "1" ]
+then
+        echo "Name Server already running. Stop it first."
+	exit 1
+fi
+
 
 echo "Database local folder: $SRC"
 
