@@ -1,18 +1,18 @@
 # GMQL-Federated Name Server
-The Nameserver for GMQL-Federated provides name-resolution for federated datasets. Registered users can share their datasets with other users or groups of users. Moreover, the nameserver releases authentication tokens for comminication between two GMQL instances.
+The Name Server for GMQL-Federated provides name-resolution for federated datasets. Registered users can share their datasets with other users or groups of users. Moreover, the name server releases authentication tokens for comminication between two GMQL instances.
 
 ## Quick Start
 Download this project and make sure that the <a href="https://docs.docker.com/v17.09/engine/admin/" target="_blank">docker daemon</a> is running on your machine. 
 
-Go into the project directory and run the following script to start the nameserver:
+Go into the project directory and run the following script to start the name server:
 ```
-sbin/start-nameserver
+sbin/start-name server
 ```
-Use your favourite web-browser to access the web interface at port 8888 (http://localhost:8888/).
+Use your favourite web-browser to access the web interface at port 8888 (e.g. if you run it locally: http://localhost:8888/).
 
-Stop the nameserver running the following script: 
+Stop the name server running the following script: 
 ```
-sbin/stop-nameserver
+sbin/stop-name server
 ```
 
 ## Requirements
@@ -56,19 +56,19 @@ If you want to run the application within a Docker container, call the provided 
 sbin/start-nameserver [LOCAL-FOLDER] [PORT]
 ```
 where `LOCAL-FOLDER` and `PORT` are two optional parameters:
-- `LOCAL-FOLDER` : absolute path to the dabase folder in the local filesystem (by default uses the folder `data` automatically created in the working directory)
+- `LOCAL-FOLDER` : absolute path to the dabase folder in the local filesystem (by default the folder `data` automatically created in the working directory is used)
 - `PORT` running port of the nameserver (default 8888)
 
-Stop the nameserver running the following script:
+Stop the name server running the following script:
 ```
 sbin/stop-nameserver
 ```
 
-## User creation and API Authentication
-### Admin account
+## User Creation and API Authentication
+### Admin Account
 Admin priviledges are assigned to the first user that registers on the nameserver. 
-### Registration and login
-Assuming the nameserver is running on `http://localhost:8888`, you can login and register a new user using the nameserver web interface:
+### Registration and Login
+Assuming the name server is running on `http://localhost:8888`, you can login and register a new user using the name server web interface:
 
 - Open `http://localhost:8888/` in your browser and use the form to setup your account.
 
@@ -94,9 +94,9 @@ In order to enable GMQL-Federated in your GMQL instance, add the following prope
 ```
 
 where: 
-- `GF_ENABLED`: tells the syste wheter to enable or disable GMQL-Federated  functionalities (default: `false`)
-- `GF_NAMESERVER_ADDRESS`: the Nameserver address (either the one provided by Politecnico di Milano or your own)
-- `GF_INSTANCENAME`: the instance identifier that you use to login to the nameserver 
+- `GF_ENABLED`: tells the syste whether to enable or disable GMQL-Federated  functionalities (default: `false`)
+- `GF_NAMESERVER_ADDRESS`: the name server address (either the one provided by Politecnico di Milano or your own)
+- `GF_INSTANCENAME`: the instance identifier that you use to login to the name server 
 - `GF_TOKEN`: your API token
 
 
