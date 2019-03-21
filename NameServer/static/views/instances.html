@@ -13,6 +13,27 @@
     </div>
 </div>
 
+<div class="row">
+    <div class="col-md-6">
+        <div class="input-group mb-3 ">
+            <div class="input-group-prepend">
+                <span class="input-group-text" id="basic-addon1"><i class="fas fa-search"></i></span>
+            </div>
+            <input type="text" ng-change="paginate()"  ng-model="pagination.filterKeyword"
+                   class="form-control" placeholder="Search" aria-label="Search" aria-describedby="basic-addon1">
+        </div>
+    </div>
+    <div class="col-md-2 offset-md-4">
+
+        <select ng-change="paginate()"  ng-model="pagination.numPerPage" 
+                class="form-control " placeholder="Search" aria-label="Search" aria-describedby="basic-addon1">
+            <option ng-repeat="opt in pagination.ippOptions" 
+                    ng-selected="opt==pagination.ippDefault"
+                    ng-value="{{opt}}">{{opt}} items</option>
+        </select>
+
+    </div>
+</div>
 
 <table class="table table-striped" ng-if="instances.length > 0">
     <thead>
@@ -23,15 +44,33 @@
         </tr>
     </thead>
     <tbody>
-        <tr ng-repeat="ins in instances">
+        <tr ng-if="pagination.slicedDataset.length==0" style="height:50px; line-height: 50px;" class="text-center">
+            <td colspan="3">No results.</td>
+        </tr>
+        <tr ng-repeat="ins in pagination.slicedDataset">
             <td>
                 {{ins.instancename}}
             </td>
             <td>{{ins.description}}</td>
             <td>
-               <a href = "mailto: {{ins.email}}">{{ins.email}}</a>
+                <a href = "mailto: {{ins.email}}">{{ins.email}}</a>
             </td>
         </tr>
 
     </tbody>
 </table>
+
+<ul uib-pagination ng-if="instances.length > 0"
+    boundary-links="true"
+    boundary-link-numbers="true"
+    rotate="true"
+    total-items="pagination.totalItems" 
+    items-per-page="pagination.numPerPage"
+    ng-model="pagination.currentPage" 
+    ng-change="paginate()"
+
+    class="pagination-sm float-right" 
+    previous-text="&lsaquo;"
+    next-text="&rsaquo;" 
+    first-text="&laquo;" 
+    last-text="&raquo;"></ul>

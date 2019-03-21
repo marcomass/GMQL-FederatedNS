@@ -15,6 +15,7 @@ code {
     font-size: 80%;
 }
 
+.nav-item {cursor: pointer}
 
 
 /* Login */

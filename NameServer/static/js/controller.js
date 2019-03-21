@@ -3,6 +3,16 @@
    ########################################################## */
 app.controller('ns_ctrl', function($scope, $http, $location, $rootScope) {
 
+    $rootScope.active_menu = $location.path().replace("/","");
+
+    $rootScope.changeView = function(viewName) {
+        $rootScope.active_menu = viewName;
+        $scope.pagination.filterKeyword = "";
+        window.location = "./index.html#!/"+viewName;
+    }  
+
+    console.log("ns_ctrl");
+
     view = $location.path(); // gets the name of the current view
 
     // Check if the user is logged-in - if it is not redirect to the login page
@@ -86,6 +96,44 @@ app.controller('ns_ctrl', function($scope, $http, $location, $rootScope) {
         setTimeout(function(){ window.location = "./index.html#!/login";}, 100);
     }
 
+    // Pagination
+    function filterByValue(array, string) {
+        function check(o,k) {  if(typeof  o[k] != "string" || o[k]==undefined) return false; else return o[k].toLowerCase().includes(string.toLowerCase()); }
+        return array.filter(o =>Object.keys(o).some(k => check(o,k)));
+    }
+
+    $scope.pagination = {
+        filteredDataset : [],
+        ippOptions : [5,10,20,40,100],
+        ippDefault : 5,
+        slicedDataset: [],
+        originalDataset: [],
+        filterKeyword: "",
+        currentPage : 1,
+        numPerPage : 5, 
+        maxSize : 5
+    }
+
+    $scope.paginate = function () {
+        console.log("pagination called.")
+
+        if( $scope.pagination.filterKeyword ==  "" ) {
+            $scope.pagination.filteredDataset =  $scope.pagination.originalDataset;
+        } else {
+            console.log("Filtering by "+ $scope.pagination.filterKeyword);
+            $scope.pagination.currentPage = 1;
+            $scope.pagination.filteredDataset = filterByValue($scope.pagination.originalDataset, $scope.pagination.filterKeyword);
+            console.log( $scope.pagination.filteredDataset);
+        }
+
+        $scope.pagination.totalItems = $scope.pagination.filteredDataset.length;
+
+        var begin = (($scope.pagination.currentPage - 1) * $scope.pagination.numPerPage)
+        , end = begin + $scope.pagination.numPerPage;
+
+        $scope.pagination.slicedDataset  = $scope.pagination.filteredDataset.slice(begin, end);
+    }
+
     /* # Initialization # */
     $rootScope.checkLogin();
 
@@ -95,6 +143,8 @@ app.controller('ns_ctrl', function($scope, $http, $location, $rootScope) {
    Home Controller
    #################### */
 app.controller('home_ctrl', function($scope, $http, $rootScope) {
+
+    console.log("home_ctrl");
 
     // Set the repository.xml string depending on the visibility of the token
     function setConf(hide) {
@@ -173,7 +223,6 @@ app.controller('home_ctrl', function($scope, $http, $rootScope) {
     $scope.hideToken = true;
     setConf(true);
     $("#alert").hide();
-    $scope.active_menu = "home";
 
 
 });
@@ -183,6 +232,8 @@ app.controller('home_ctrl', function($scope, $http, $rootScope) {
    Login Controller
    #################### */
 app.controller('login_ctrl', function($scope, $rootScope, $http) {
+
+    console.log("login_ctrl");
 
     // Login function
     $scope.login = function(user) {
@@ -231,6 +282,8 @@ app.controller('login_ctrl', function($scope, $rootScope, $http) {
    Signup Controller
    #################### */
 app.controller('signup_ctrl', function($scope, $http) {
+
+    console.log("signup_ctrl");
 
     // Generate random user data for testing
     function generateRandomUser() {
@@ -369,6 +422,9 @@ app.controller('signup_ctrl', function($scope, $http) {
    #################### */
 app.controller('datasets_ctrl', function($scope, $location, $http, $rootScope, $routeParams) {
 
+    console.log("datasets_ctrl");
+
+
     // List datasets
     function getDatasets() {
 
@@ -383,6 +439,8 @@ app.controller('datasets_ctrl', function($scope, $location, $http, $rootScope, $
             // SUCCESS
             function(response) {
                 $scope.datasets = response.data;
+                $scope.pagination.originalDataset = $scope.datasets;
+                $scope.paginate();
             }, 
 
             // ERROR 
@@ -585,8 +643,6 @@ app.controller('datasets_ctrl', function($scope, $location, $http, $rootScope, $
 
     /* # Initialization # */
 
-    $scope.active_menu = "datasets";
-
     $scope.datasets = [];
 
     if("datasetId" in $routeParams)
@@ -636,6 +692,8 @@ app.controller('datasets_ctrl', function($scope, $location, $http, $rootScope, $
    #################### */
 app.controller('instances_ctrl', function($scope, $location, $rootScope, $http, $routeParams) {
 
+    console.log("instances_ctrl");
+
     // List all instances
     function getInstances() {
 
@@ -650,6 +708,8 @@ app.controller('instances_ctrl', function($scope, $location, $rootScope, $http, 
             // SUCCESS
             function(response) {
                 $scope.instances = response.data;
+                $scope.pagination.originalDataset = $scope.instances;
+                $scope.paginate();
             }, 
 
             // ERROR 
@@ -660,7 +720,6 @@ app.controller('instances_ctrl', function($scope, $location, $rootScope, $http, 
     }
 
     /* # Initialization # */
-    $scope.active_menu = "instances";
     getInstances();
 
 });
@@ -669,6 +728,8 @@ app.controller('instances_ctrl', function($scope, $location, $rootScope, $http, 
    Groups Controller
    #################### */
 app.controller('groups_ctrl', function($scope, $location, $rootScope, $http, $routeParams) {
+
+    console.log("groups_ctrl");
 
     // List all groups
     function getGroups() {
@@ -683,7 +744,9 @@ app.controller('groups_ctrl', function($scope, $location, $rootScope, $http, $ro
         }).then(
             // SUCCESS
             function(response) {
-                $scope.groups = response.data;
+                $scope.groups = response.data.filter(g=> !(g.instances.length==1&&g.name==g.instances[0]) || g.name=="GMQL-ALL");
+                $scope.pagination.originalDataset = $scope.groups;
+                $scope.paginate();
             }, 
 
             // ERROR 
@@ -862,9 +925,6 @@ app.controller('groups_ctrl', function($scope, $location, $rootScope, $http, $ro
     }
 
     /* # Initialization # */
-
-    $scope.active_menu = "groups";
-
     view = $location.path();
 
     if("groupId" in $routeParams)

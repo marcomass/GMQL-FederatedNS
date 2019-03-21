@@ -2,7 +2,7 @@
 <div class="row">
     <div class="col-md-7">
         <h2>Datasets</h2>
-        <p ng-if="datasets.length > 0">The following is the list of datasets available to you</p>  
+        <p ng-if="datasets.length > 0">The following is the list of datasets available to your instance</p>  
     </div>
     <div class="col-md-5 ">
         <a href="#!/datasets/create" class="btn btn-success float-right">Add a new dataset</a>
@@ -15,11 +15,33 @@
     </div>
 </div>
 
+<div class="row">
+    <div class="col-md-6">
+        <div class="input-group mb-3 ">
+            <div class="input-group-prepend">
+                <span class="input-group-text" id="basic-addon1"><i class="fas fa-search"></i></span>
+            </div>
+            <input type="text" ng-change="paginate()"  ng-model="pagination.filterKeyword"
+                   class="form-control" placeholder="Search" aria-label="Search" aria-describedby="basic-addon1">
+        </div>
+    </div>
+    <div class="col-md-2 offset-md-4">
+
+        <select ng-change="paginate()"  ng-model="pagination.numPerPage" 
+                class="form-control " placeholder="Search" aria-label="Search" aria-describedby="basic-addon1">
+            <option ng-repeat="opt in pagination.ippOptions" 
+                    ng-selected="opt==pagination.ippDefault"
+                    ng-value="{{opt}}">{{opt}} items</option>
+        </select>
+
+    </div>
+</div>
+
+
 <table class="table table-striped" ng-if="datasets.length > 0">
     <thead>
         <tr>
             <th>Identifier</th>
-            <th>Name</th>
             <th>Owner</th>
             <th>Author</th>
             <th>Description</th>
@@ -28,16 +50,18 @@
         </tr>
     </thead>
     <tbody>
-        <tr ng-repeat="ds in datasets">
+        <tr ng-if="pagination.slicedDataset.length==0" style="height:50px; line-height: 50px;" class="text-center">
+            <td colspan="6">No results.</td>
+        </tr>
+        <tr ng-repeat="ds in pagination.slicedDataset">
             <td>
                 <a ng-if="ds.owner==logged_user.instancename" href="#!/datasets/edit/{{ds.identifier}}">{{ds.identifier}}</a>
                 <span ng-if="ds.owner!=logged_user.instancename">{{ds.identifier}}</span>
-            
+
             </td>
-            <td>{{ds.name}}</td>
             <td>{{ds.owner}}</td>
-            <td>{{ds.author}}</td>
-            <td>{{ds.description}}</td>
+            <td>{{ds.author=='undefined'?'N/A':ds.author}}</td>
+            <td>{{ds.description=='undefined'?'N/A':ds.description}}</td>
             <td>
                 <ul>
                     <li ng-repeat="e in ds.allowed_to">{{e}}</li>
@@ -52,3 +76,18 @@
 
     </tbody>
 </table>
+
+<ul uib-pagination ng-if="datasets.length > 0"
+    boundary-links="true"
+    boundary-link-numbers="true"
+    rotate="true"
+    total-items="pagination.totalItems" 
+    items-per-page="pagination.numPerPage"
+    ng-model="pagination.currentPage" 
+    ng-change="paginate()"
+
+    class="pagination-sm float-right" 
+    previous-text="&lsaquo;"
+    next-text="&rsaquo;" 
+    first-text="&laquo;" 
+    last-text="&raquo;"></ul>
