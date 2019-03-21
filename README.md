@@ -57,7 +57,7 @@ sbin/start-nameserver [LOCAL-FOLDER] [PORT]
 ```
 where `LOCAL-FOLDER` and `PORT` are two optional parameters:
 - `LOCAL-FOLDER` : absolute path to the dabase folder in the local filesystem (by default the folder `data` automatically created in the working directory is used)
-- `PORT` running port of the nameserver (default 8888)
+- `PORT` running port of the name server (default 8888)
 
 Stop the name server running the following script:
 ```
