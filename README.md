@@ -106,8 +106,8 @@ The "Datasets" section of the nameserver allows users to share their public data
 
 Assuming that the logged user (instance) is "admin", the main page of this section will show a list of federated datasets that <i>admin</i> is allowed to use. <br>
 These datasets can be:
-- Datasets available to all the federation (i.e. shared with the group <i>GMQL-ALL</i>)
-- Dataset owned by other members of the federation who have decided to share their dataset with <i>admin</i> or with a group of users (instances) that includes <i>admin</i>
+- Datasets available to all the federation (i.e. shared with the group <i>GMQL-ALL</i>).
+- Dataset owned by other members of the federation who have decided to share their dataset with <i>admin</i> or with a group of users (instances) that includes <i>admin</i>.
 - Datasets created by "admin". In this case the dataset name will appear as a link, that, once clicked, allows the editing of that dataset.
 
 In order to create a federated dataset, click on the "Add a new dataset" button. The dataset creation form will appear:
@@ -116,9 +116,9 @@ In order to create a federated dataset, click on the "Add a new dataset" button.
 
 The following fields are available: 
 - <b>Name</b> (mandatory): name of the dataset, available in your public repository, that you want to add to the federation. The name written in this field must exactly match the name of the dataset in your public repository
-- <b>Description</b>: a description of the dataset
+- <b>Description</b>: a description of the dataset.
 - <b>Privacy</b>: defines the instances (or groups of instances) that will be allowed to use your dataset. Choose among the instances (groups) in the left box and move them to the right box to allow them to use your dataset. By default, your instance is always allowed to see your datasets.
-- <b>Repositories</b> : defines in which repositories (instances) the same dataset is available. By default your repository is added to this list. This feature is added to improve availability and performance of the system. For example, if you are running another instance of GMQL that has the same dataset in its public repository, you may add that instance in this list. If one of the instances in this list is offline, another instance in the list may be chosen for execution. Instances different from yours may be also chosen for optimization reasons. <u>Currently, GMQL-Federated does not support multiple repositories.</u>.
+- <b>Repositories</b> : defines in which repositories (instances) the same dataset is available. By default your repository is added to this list. This feature is added to improve availability and performance of the system. For example, if you are running another instance of GMQL that has the same dataset in its public repository, you may add that instance in this list. If one of the instances in this list is offline, another instance in the list may be chosen for execution. Instances different from yours may be also chosen for optimization reasons. <u>Currently, GMQL-Federated does not support multiple repositories</u>.
 
   
 ## Groups 
@@ -128,8 +128,8 @@ The "Groups" section of the nameserver allows users to create groups of instance
 
 Assuming that the logged user (instance) is "admin", the main page of this section will show the list of groups having <i>admin</i> as a member. <br>
 These groups can be:
-- The group containing all instances in the federation (<i>GMQL-ALL</i>)
-- Groups created by other members of the federation who have included <i>admin</i> as a member of the group
+- The group containing all instances in the federation (<i>GMQL-ALL</i>).
+- Groups created by other members of the federation who have included <i>admin</i> as a member of the group.
 - Groups created by <i>admin</i>. In this case the group name will appear as a link, that, once clicked, allows the editing of that group.
 
 In order to create a group, click on the "Create a new group" button. The group creation form will appear:
