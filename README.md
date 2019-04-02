@@ -6,13 +6,13 @@ Download this project and make sure that the <a href="https://docs.docker.com/v1
 
 Go into the project directory and run the following script to start the name server:
 ```
-sbin/start-name server
+sbin/start-nameserver
 ```
 Use your favourite web-browser to access the web interface at port 8888 (e.g. if you run it locally: http://localhost:8888/).
 
-Stop the name server running the following script: 
+Stop the nameserver running the following script: 
 ```
-sbin/stop-name server
+sbin/stop-nameserver
 ```
 
 ## Requirements
