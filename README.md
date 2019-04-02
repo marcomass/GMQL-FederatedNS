@@ -10,7 +10,7 @@ sbin/start-nameserver
 ```
 Use your favourite web-browser to access the web interface at port 8888 (e.g. if you run it locally: ht<span>tp</span>://localhost:8888/).
 
-Stop the nameserver running the following script: 
+Stop the name server running the following script: 
 ```
 sbin/stop-nameserver
 ```
@@ -66,7 +66,7 @@ sbin/stop-nameserver
 
 ## User Creation and API Authentication
 ### Admin Account
-Admin priviledges are assigned to the first user that registers on the nameserver. 
+Admin priviledges are assigned to the first user that registers on the name server. 
 ### Registration and Login
 Assuming the name server is running on `http://localhost:8888`, you can login and register a new user using the name server web interface:
 
@@ -100,7 +100,7 @@ where:
 - `GF_TOKEN`: your API token
 
 ## Adding a Federated Dataset
-The "Datasets" section of the nameserver allows users to share their public datasets with other members of the federation.
+The "Datasets" section of the name server allows users to share their public datasets with other members of the federation.
 
 ![dslist](https://github.com/DEIB-GECO/GMQL-FederatedNS/raw/master/screenshots/datasets-list.png)
 
@@ -122,7 +122,7 @@ The following fields are available:
 
   
 ## Groups 
-The "Groups" section of the nameserver allows users to create groups of instances. Groups simplify the process of sharing a dataset with other members of the federation: as shown before, instead of defining the privacy of a dataset by sharing it with single instances, you may share it with a pre-defined group including multiple instances.
+The "Groups" section of the name server allows users to create groups of instances. Groups simplify the process of sharing a dataset with other members of the federation: as shown before, instead of defining the privacy of a dataset by sharing it with single instances, you may share it with a pre-defined group including multiple instances.
 
 ![gplist](https://github.com/DEIB-GECO/GMQL-FederatedNS/raw/master/screenshots/groups-list.png)
 
