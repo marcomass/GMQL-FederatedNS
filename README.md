@@ -8,7 +8,7 @@ Go into the project directory and run the following script to start the name ser
 ```
 sbin/start-nameserver
 ```
-Use your favourite web-browser to access the web interface at port 8888 (e.g. if you run it locally: http://localhost:8888/).
+Use your favourite web-browser to access the web interface at port 8888 (e.g. if you run it locally: ht<span>tp</span>://localhost:8888/).
 
 Stop the nameserver running the following script: 
 ```
