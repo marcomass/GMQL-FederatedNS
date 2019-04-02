@@ -140,6 +140,6 @@ The following fields are available:
 - <b>Name</b> (mandatory): name of the group.
 - <b>Instances</b> (at least two): members of the group.
   
-  Note that the creation of a group of instances does not mean that all the instances in a group can use each other's datasets. The privacy of a dataset is always defined by the privacy list specified for that specific dataset.
+Note that the creation of a group of instances does not imply that all instances in a group can use each other's datasets. The privacy of a dataset is always defined by the privacy list specified for that specific dataset.
   
   
